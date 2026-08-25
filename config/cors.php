@@ -19,10 +19,11 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [
+    'allowed_origins' => array_filter([
         'http://localhost:3000',
         'http://localhost:3001',
-    ],
+        env('FRONTEND_URL'),          // set to https://cb-next.vercel.app in Railway
+    ]),
 
     'allowed_origins_patterns' => [],
 
