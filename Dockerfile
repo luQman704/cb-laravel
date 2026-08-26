@@ -5,7 +5,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN docker-php-ext-install \
-    intl zip pdo pdo_mysql mbstring xml ctype tokenizer opcache
+    intl zip pdo pdo_mysql mbstring xml \
+    && docker-php-ext-enable opcache
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
