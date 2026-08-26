@@ -1,0 +1,5 @@
+{
+  "php": {
+    "extensions": ["intl", "zip", "pdo_mysql", "opcache"]
+  }
+}
