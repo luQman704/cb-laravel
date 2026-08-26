@@ -23,8 +23,9 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Session\Middleware\StartSession::class,
         ]);
 
-        // Enable stateful API support for Sanctum (sessions + tokens)
-        $middleware->statefulApi();
+        // Do not use statefulApi() — it adds CSRF verification to API routes
+        // which breaks cross-origin SPA requests. Session-based guest cart still
+        // works because StartSession is added above. Token auth is unaffected.
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
