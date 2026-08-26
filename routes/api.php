@@ -15,14 +15,17 @@ use Illuminate\Support\Facades\Route;
 Route::get('/debug-db', function () {
     try {
         $pdo = DB::connection()->getPdo();
-        $products = DB::table('products')->count();
+        $currentDb = DB::selectOne('SELECT DATABASE() as db')->db;
+        $tables = DB::select('SHOW TABLES');
+        $products = DB::select('SELECT COUNT(*) as cnt, active FROM products GROUP BY active');
         return response()->json([
             'connected' => true,
             'db_host' => config('database.connections.mysql.host'),
             'db_port' => config('database.connections.mysql.port'),
-            'db_name' => config('database.connections.mysql.database'),
-            'db_username' => config('database.connections.mysql.username'),
-            'products_count' => $products,
+            'db_name_config' => config('database.connections.mysql.database'),
+            'db_name_actual' => $currentDb,
+            'tables' => array_map(fn($r) => array_values((array)$r)[0], $tables),
+            'products_by_active' => $products,
         ]);
     } catch (\Exception $e) {
         return response()->json(['connected' => false, 'error' => $e->getMessage()]);
