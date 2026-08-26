@@ -13,6 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Trust Railway's load balancer so HTTPS is detected correctly
+        $middleware->trustProxies(at: '*');
+
         // Force JSON Accept header on all /api/* requests, and start sessions
         // so guest cart resolution via session ID works without SPA cookie auth.
         $middleware->api(prepend: [
