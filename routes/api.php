@@ -8,7 +8,26 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ShippingMethodController;
 use App\Http\Controllers\Api\TaxRateController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+
+// Temporary debug route — remove after fixing DB connection
+Route::get('/debug-db', function () {
+    try {
+        $pdo = DB::connection()->getPdo();
+        $products = DB::table('products')->count();
+        return response()->json([
+            'connected' => true,
+            'db_host' => config('database.connections.mysql.host'),
+            'db_port' => config('database.connections.mysql.port'),
+            'db_name' => config('database.connections.mysql.database'),
+            'db_username' => config('database.connections.mysql.username'),
+            'products_count' => $products,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['connected' => false, 'error' => $e->getMessage()]);
+    }
+});
 
 /*
 |--------------------------------------------------------------------------
